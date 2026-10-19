@@ -7,90 +7,63 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    // Consultar los datos retornarlos 
     public function index()
     {
-        //
         $books = Book::all();
-        return view ("books.index",compact("books"));
+
+        return view("books.index", compact("books"));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        // Acá se crea la logica para crear datos
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'fecha' => 'required|date',
+            'edicion' => 'required|string|max:255',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
         $book = new Book();
         $book->name = $request->nombre;
         $book->year = $request->fecha;
         $book->price = $request->precio;
         $book->edition = $request->edicion;
         $book->save();
+
         return redirect()->route('books.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $book = Book::findOrFail($id);
+
+        return view("books.edit", compact("book"));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'fecha' => 'required|date',
+            'edicion' => 'required|string|max:255',
+            'precio' => 'required|numeric|min:0',
+        ]);
+
+        $book = Book::findOrFail($id);
+        $book->name = $request->nombre;
+        $book->year = $request->fecha;
+        $book->price = $request->precio;
+        $book->edition = $request->edicion;
+        $book->save();
+
+        return redirect()->route('books.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $book = Book::findOrFail($id);
+        $book->delete();
+
+        return redirect()->route('books.index');
     }
 }

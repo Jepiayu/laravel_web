@@ -27,6 +27,7 @@
                     <th>Fecha</th>
                     <th>Edición</th>
                     <th>Precio</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,18 @@
                     <th>{{$book->year}}</th>
                     <th>{{$book->edition}}</th>
                     <th>{{$book->price}}</th>
+                    <td>
+                        <a href="{{ route('books.edit', $book->id) }}">Editar</a>
+                        <form
+                            action="{{ route('books.destroy', $book->id) }}"
+                            method="POST"
+                            style="display: inline;"
+                            onsubmit="return confirm('¿Seguro que deseas eliminar este libro?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
